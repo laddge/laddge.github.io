@@ -75,6 +75,7 @@
                     displayTime.setHours(inputH.value);
                     displayTime.setMinutes(inputM.value);
                     displayTime.setSeconds(inputS.value);
+                    displayTime.setMilliseconds(0);
                     diff = String(displayTime - Date.now());
                 }
                 localStorage.setItem('diff', diff);
