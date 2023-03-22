@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="進化した時計のカタチ">
+        <title>星野時計</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    </head>
+    <body class="bg-light">
+        <div class="text-center mt-5 display-4 font-monospace">
+            <p id="display">00:00:00</p>
+        </div>
+        <div class="p-4 text-center container">
+            <div class="input-group">
+                <select id="inputH" class="form-select">
+                    <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option>
+                </select>
+                <span class="input-group-text">:</span>
+                <select id="inputM" class="form-select">
+                    <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option><option>32</option><option>33</option><option>34</option><option>35</option><option>36</option><option>37</option><option>38</option><option>39</option><option>40</option><option>41</option><option>42</option><option>43</option><option>44</option><option>45</option><option>46</option><option>47</option><option>48</option><option>49</option><option>50</option><option>51</option><option>52</option><option>53</option><option>54</option><option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+                </select>
+                <span class="input-group-text">:</span>
+                <select id="inputS" class="form-select">
+                    <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option><option>32</option><option>33</option><option>34</option><option>35</option><option>36</option><option>37</option><option>38</option><option>39</option><option>40</option><option>41</option><option>42</option><option>43</option><option>44</option><option>45</option><option>46</option><option>47</option><option>48</option><option>49</option><option>50</option><option>51</option><option>52</option><option>53</option><option>54</option><option>55</option><option>56</option><option>57</option><option>58</option><option>59</option>
+                </select>
+            </div>
+            <button id="startBtn" class="btn btn-lg btn-primary w-100 mt-3">Start</button>
+            <button id="pauseBtn" class="btn btn-lg btn-outline-primary w-100 mt-3 d-none">Pause</button>
+            <button id="resetBtn" class="btn btn-lg btn-outline-secondary w-100 mt-3">Reset</button>
+        </div>
+        <script type="text/javascript">
+            const display = document.getElementById('display');
+            const inputH = document.getElementById('inputH');
+            const inputM = document.getElementById('inputM');
+            const inputS = document.getElementById('inputS');
+            const startBtn = document.getElementById('startBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            let diff = localStorage.getItem('diff');
+            let paused = localStorage.getItem('paused');
+            let timer;
+
+            function main() {
+                if (diff === null) return;
+                inputH.disabled = true;
+                inputM.disabled = true;
+                inputS.disabled = true;
+                if (paused !== null) {
+                    const displayTime = new Date(Number(paused) + Number(diff));
+                    const h = ('0' + displayTime.getHours()).slice(-2);
+                    const m = ('0' + displayTime.getMinutes()).slice(-2);
+                    const s = ('0' + displayTime.getSeconds()).slice(-2);
+                    display.innerText = h + ':' + m + ':' + s;
+                } else {
+                    startBtn.classList.add('d-none');
+                    pauseBtn.classList.remove('d-none');
+                    timer = setInterval(() => {
+                        const displayTime = new Date(Date.now() + Number(diff));
+                        const h = ('0' + displayTime.getHours()).slice(-2);
+                        const m = ('0' + displayTime.getMinutes()).slice(-2);
+                        const s = ('0' + displayTime.getSeconds()).slice(-2);
+                        display.innerText = h + ':' + m + ':' + s;
+                    }, 100);
+                }
+            }
+
+            function start() {
+                if (paused !== null && diff !== null) {
+                    diff = String(Number(diff) - Date.now() + Number(paused));
+                    paused = null
+                    localStorage.removeItem('paused');
+                } else {
+                    const displayTime = new Date();
+                    displayTime.setHours(inputH.value);
+                    displayTime.setMinutes(inputM.value);
+                    displayTime.setSeconds(inputS.value);
+                    diff = String(displayTime - Date.now());
+                }
+                localStorage.setItem('diff', diff);
+                main();
+            }
+
+            function pause() {
+                pauseBtn.classList.add('d-none');
+                startBtn.classList.remove('d-none');
+                clearInterval(timer);
+                paused = String(Date.now());
+                localStorage.setItem('paused', paused);
+            }
+
+            function reset() {
+                clearInterval(timer);
+                display.innerText = '00:00:00';
+                inputH.disabled = false;
+                inputM.disabled = false;
+                inputS.disabled = false;
+                pauseBtn.classList.add('d-none');
+                startBtn.classList.remove('d-none');
+                diff = null;
+                paused = null;
+                localStorage.clear();
+            }
+
+            window.addEventListener('load', main);
+            startBtn.addEventListener('click', start);
+            pauseBtn.addEventListener('click', pause);
+            resetBtn.addEventListener('click', reset);
+        </script>
+    </body>
+</html>
