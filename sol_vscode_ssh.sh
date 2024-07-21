@@ -12,8 +12,7 @@ echo -e "\e[32;1mVSCodeのインストール\e[m"
 brew install visual-studio-code
 
 # install extensions
-code --install-extension ms-ceintl.vscode-language-pack-ja \
-  --install-extension ms-vscode-remote.remote-ssh
+code --install-extension ms-vscode-remote.remote-ssh
 
 # ssh settings
 echo -e "\e[32;1msshの設定\e[m"
