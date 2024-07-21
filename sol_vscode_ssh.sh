@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/zsh
 
 # install homebrew
 echo -e "\e[32;1mhomebrewのインストール(PCのパスワードを聞かれたりエンターを押すように要求されるので指示どおりに答えてください)\e[m\nエンターキーで進む >>>"
 read
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # install vscode
 echo -e "\e[32;1mVSCodeのインストール\e[m"
